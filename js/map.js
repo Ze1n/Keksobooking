@@ -1,22 +1,26 @@
-var MAIN_PIN_X = 750;
-var MAIN_PIN_Y = 325;
-var MAIN_PIN_WIDTH = 65;
-var MAIN_PIN_HEIGHT = 82;
-var similarMapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-var similarCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var similarFeatures = document.querySelector('template').content.querySelector('.popup__features');
-var fragment = document.createDocumentFragment();
-var fragment2 = document.createDocumentFragment();
-var fragment3 = document.createDocumentFragment();
-var similarPinsElement = document.querySelector(".map__pins");
-var similarCardElement = document.querySelector(".map");
-var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
+'use strict';
+
+const MAIN_PIN_WIDTH = 65;
+const MAIN_PIN_IMG_HEIGHT = 62;
+const MAIN_PIN_AFTER = 22;
+const MAIN_PIN_HEIGHT = MAIN_PIN_IMG_HEIGHT + MAIN_PIN_AFTER;
+const MAIN_PIN_START_X = 600;
+const MAIN_PIN_START_Y = 375;
+let similarMapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+let similarCardTemplate = document.querySelector('template').content.querySelector('.map__card');
+let similarFeatures = document.querySelector('template').content.querySelector('.popup__features');
+let fragment = document.createDocumentFragment();
+let fragment2 = document.createDocumentFragment();
+let fragment3 = document.createDocumentFragment();
+let similarPinsElement = document.querySelector(".map__pins");
+let similarCardElement = document.querySelector(".map");
+let titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var types = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
-var hours = ['12:00', '13:00', '14:00'];
-var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photosLinks = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+let types = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
+let hours = ['12:00', '13:00', '14:00'];
+let featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+let photosLinks = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
 'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
@@ -92,7 +96,7 @@ function generateAds(n){
             },
             location:
             {
-                x: getRandomIntInclusive(130, 630),
+                x: getRandomIntInclusive(23, 1177),
                 y: getRandomIntInclusive(130, 630)
             },
             atributes:
@@ -101,7 +105,7 @@ function generateAds(n){
             }
         }
 
-        array[i].offer.address = `${array[i].location.x}, ${array[i].location.y}`;
+        array[i].offer.address = `${array[i].location.x}, ${array[i].location.y + 23 + 18}`;
     }
 
     return array;
@@ -166,9 +170,14 @@ var adressInput = document.querySelector('input[name=address]');
 let noticeForm = document.querySelector('.notice__form');
 let noticeSubmit = noticeForm.querySelector('.form__submit');
 let resetButton = noticeForm.querySelector('.form__reset');
+let typeSelectList = noticeForm.querySelector('#type');
+let timeInSelectList = noticeForm.querySelector('#timein');
+let timeOutSelectList = noticeForm.querySelector('#timeout');
+let roomNumberSelectList = noticeForm.querySelector('#room_number');
+let capacitySelectList = noticeForm.querySelector('#capacity');
 
-function fillAdress(){
-    adressInput.value = ads[0].offer.address;
+function onButtonCloseClick(){
+    similarCardElement.querySelector('article').classList.add('hidden');
 }
 
 function makeDisOrAble(flag){
@@ -180,9 +189,11 @@ function makeDisOrAble(flag){
 function onMainPinMouseupPress(){
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-    fillAdress();
     makeDisOrAble(false);
     addPins(ads);
+    let buttonPopupClose = similarCardElement.querySelector('.popup__close');
+    buttonPopupClose.addEventListener('click', onButtonCloseClick);
+    // mapPinMain.removeEventListener('mouseup', onMainPinMouseupPress);
 }
 
 function onButtonSubmitPress(){
@@ -207,7 +218,9 @@ function onButtonSubmitPress(){
             element.value = '';
         });
         noticeForm.querySelector('textarea[name=description]').value = '';
-        adressInput.value = '750, 325';
+        adressInput.value = `${MAIN_PIN_START_X}, ${MAIN_PIN_START_Y}`;
+        mapPinMain.style.left = MAIN_PIN_START_X + 'px';
+        mapPinMain.style.top = MAIN_PIN_START_Y + 'px';
     } 
 }
 
@@ -224,7 +237,9 @@ function onButtonResetPress(){
         element.classList.remove('input--invalid');
     });
     noticeForm.querySelector('textarea[name=description]').value = '';
-    adressInput.value = '750, 325';
+    adressInput.value = `${MAIN_PIN_START_X}, ${MAIN_PIN_START_Y}`;
+    mapPinMain.style.left = MAIN_PIN_START_X + 'px';
+    mapPinMain.style.top = MAIN_PIN_START_Y + 'px';
 }
 
 function onPinClickPress(evt){
@@ -233,15 +248,188 @@ function onPinClickPress(evt){
             similarCardElement.removeChild(similarCardElement.querySelector('article'));
             fragment2.appendChild(renderCard(ads[i]));
             similarCardElement.insertBefore(fragment2, document.querySelector(".map__filters-container"));
+            let buttonPopupClose = similarCardElement.querySelector('.popup__close');
+            buttonPopupClose.addEventListener('click', onButtonCloseClick);
         } 
     }
 }
 
+function onTypeInputChange(){
+    if (typeSelectList.value === 'flat'){
+        noticeForm.querySelector('#price').min = '1000';
+        noticeForm.querySelector('#price').placeholder = '1000';
+    }
+    else if (typeSelectList.value === 'bungalo'){
+        noticeForm.querySelector('#price').min = '0';
+        noticeForm.querySelector('#price').placeholder = '0';
+    }
+    else if (typeSelectList.value === 'house'){
+        noticeForm.querySelector('#price').min = '5000';
+        noticeForm.querySelector('#price').placeholder = '5000';
+    }
+    else if (typeSelectList.value === 'palace'){
+        noticeForm.querySelector('#price').min = '10000';
+        noticeForm.querySelector('#price').placeholder = '10000';
+    }
+}
+
+function onTimeInSelectChange(){
+    if (timeInSelectList.value === '12:00'){
+        timeOutSelectList.value = '12:00';
+    }
+    else if (timeInSelectList.value === '13:00'){
+        timeOutSelectList.value = '13:00';
+    }
+    else if (timeInSelectList.value === '14:00'){
+        timeOutSelectList.value = '14:00';
+    }
+}
+
+function onTimeOutSelectChange(){
+    if (timeOutSelectList.value === '12:00'){
+        timeInSelectList.value = '12:00';
+    }
+    else if (timeOutSelectList.value === '13:00'){
+        timeInSelectList.value = '13:00';
+    }
+    else if (timeOutSelectList.value === '14:00'){
+        timeInSelectList.value = '14:00';
+    }
+}
+
+// function onCapacitySelectInvalid(){
+//     if(roomNumberSelectList.value === '1' && capacitySelectList.value !== '1'){
+//         console.log('НЕ');
+//         capacitySelectList.setCustomValidity('В однокомнатную квартиру можно заселить только одного гостя');
+//     }
+//     else if(roomNumberSelectList.value === '2' && (capacitySelectList.value !== '2' || capacitySelectList.value !== '1')){
+//         capacitySelectList.setCustomValidity('В двухкомнатную квартиру можно заселить двух и менее гостей');
+//     }
+//     else if(roomNumberSelectList.value === '3' && capacitySelectList.value === '0'){
+//         capacitySelectList.setCustomValidity('В трехкомнатную квартиру можно заселить трех и менее гостей');
+//     }
+//     else if(roomNumberSelectList.value === '100' && capacitySelectList.value !== '0'){
+//         capacitySelectList.setCustomValidity('Ну 100 комнат это только не для гостей бро');
+//     }
+// }
+
+let mapPinMainHandler = document.querySelector('.map__pin--main img');
+
+mapPinMainHandler.addEventListener('mousedown', function(evt){
+    evt.preventDefault();
+
+    let startChords = {
+        x: evt.clientX,
+        y: evt.clientY
+    };
+
+    function onMouseMove(moveEvt){
+        moveEvt.preventDefault();
+
+        let shift = {
+            x: startChords.x - moveEvt.clientX,
+            y: startChords.y - moveEvt.clientY
+        };
+
+        startChords = {
+            x: moveEvt.clientX,
+            y: moveEvt.clientY
+        };
+
+        if (mapPinMain.offsetLeft - shift.x < 32){
+            mapPinMain.style.left = 32 + 'px';
+        }
+        else if (mapPinMain.offsetLeft - shift.x > 1168){
+            mapPinMain.style.left = 1168 + 'px';
+        }
+        else {
+            mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+        }
+
+        if (mapPinMain.offsetTop - shift.y < 130){
+            mapPinMain.style.top = 130 + 'px';
+        }
+        else if (mapPinMain.offsetTop - shift.y > 630){
+            mapPinMain.style.top = 630 + 'px';
+        }
+        else {
+            mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+        }
+        
+        adressInput.value = `${mapPinMain.offsetLeft - shift.x}, ${mapPinMain.offsetTop - shift.y + (MAIN_PIN_IMG_HEIGHT / 2 + MAIN_PIN_AFTER)}`;
+    };
+
+    function onMouseUp(upEvt){
+        upEvt.preventDefault();
+
+        if (similarCardElement.querySelector('article') != undefined){
+            similarCardElement.removeChild(similarCardElement.querySelector('article'));
+            for (let i = 0; i < ads.length; i++){
+                similarPinsElement.removeChild(similarPinsElement.querySelector(`.map__pin${i}`));
+            }
+        }
+
+        document.querySelector('.map').classList.remove('map--faded');
+        document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+        makeDisOrAble(false);
+        addPins(ads);
+        let buttonPopupClose = similarCardElement.querySelector('.popup__close');
+        buttonPopupClose.addEventListener('click', onButtonCloseClick);
+
+        let shift = {
+            x: startChords.x - upEvt.clientX,
+            y: startChords.y - upEvt.clientY
+        };
+
+        adressInput.value = `${mapPinMain.offsetLeft - shift.x}, ${mapPinMain.offsetTop - shift.y + (MAIN_PIN_IMG_HEIGHT / 2 + MAIN_PIN_AFTER)}`;
+
+        similarPinsElement.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+
+    };
+
+    similarPinsElement.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+})
+
 makeDisOrAble(true);
-mapPinMain.addEventListener('mouseup', onMainPinMouseupPress);
 document.addEventListener('click', onPinClickPress);
 noticeForm.addEventListener('invalid', function(evt){
     evt.target.classList.add('input--invalid')
 }, true);
 noticeSubmit.addEventListener('click', onButtonSubmitPress);
 resetButton.addEventListener('click', onButtonResetPress);
+typeSelectList.addEventListener('change', onTypeInputChange);
+timeInSelectList.addEventListener('change', onTimeInSelectChange);
+timeOutSelectList.addEventListener('change', onTimeOutSelectChange);
+// capacitySelectList.addEventListener('change', function(){
+//     console.log(roomNumberSelectList.value);
+//     console.log(capacitySelectList.value);
+//     if(roomNumberSelectList.value === '1' && capacitySelectList.value !== '1'){
+//         console.log('НЕ');
+//         capacitySelectList.querySelector('input').validity.valid = false;
+//         capacitySelectList.setCustomValidity('В однокомнатную квартиру можно заселить только одного гостя');
+//     }
+// });
+
+
+
+
+//Работа с сетью
+
+(function(){
+    let URL = ' https://js.dump.academy/code-and-magick';
+
+    window.upload = function(data, onSuccess){
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function(){
+        onSuccess(xhr.response);
+    })
+
+    xhr.open('POST', URL);
+    xhr.send(data);
+    }; 
+})();

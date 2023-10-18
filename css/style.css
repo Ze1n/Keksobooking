@@ -421,6 +421,8 @@ textarea:focus {
 
   line-height: 40px;
   text-indent: 0;
+
+  cursor: pointer;
 }
 
 .map__filters-container {
