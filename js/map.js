@@ -114,7 +114,7 @@ function generateAds(n){
 function renderPins(pin){
     var pinElement = similarMapPinTemplate.cloneNode(true);
     pinElement.querySelector('img').className = `pin__img pin__img${pin.atributes.nameOfClass}`;
-    pinElement.className = `map__pin map__pin${pin.atributes.nameOfClass}`;
+    pinElement. = `map__pin map__pin${pin.atributes.nameOfClass}`;
     pinElement.style = `left: ${pin.location.x}px; top: ${pin.location.y}px;`;
     pinElement.querySelector('img').src = pin.author.avatar;
     pinElement.querySelector('img').alt = pin.offer.title;
@@ -141,6 +141,7 @@ function addPins(ads){
         fragment.appendChild(renderPins(ads[i]));
         similarPinsElement.appendChild(fragment);
     }
+    similarPinsElement.appendChild(fragment);
     fragment2.appendChild(renderCard(ads[0]));
     similarCardElement.insertBefore(fragment2, document.querySelector(".map__filters-container"));
     // similarCardElement.removeChild(document.querySelector('.popup__features'));
@@ -412,24 +413,3 @@ timeOutSelectList.addEventListener('change', onTimeOutSelectChange);
 //         capacitySelectList.setCustomValidity('В однокомнатную квартиру можно заселить только одного гостя');
 //     }
 // });
-
-
-
-
-//Работа с сетью
-
-(function(){
-    let URL = ' https://js.dump.academy/code-and-magick';
-
-    window.upload = function(data, onSuccess){
-    let xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function(){
-        onSuccess(xhr.response);
-    })
-
-    xhr.open('POST', URL);
-    xhr.send(data);
-    }; 
-})();
