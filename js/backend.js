@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
+    let URL = 'https://24.javascript.pages.academy/keksobooking/data';
+
     window.backend = {
-        load: function(onSuccess, onError){
-            let URL = 'https://24.javascript.pages.academy/keksobooking/data';
-            
+        download: function(onSuccess, onError){
             let xhr = new XMLHttpRequest();
             xhr.responseType = 'json';
 
@@ -19,7 +19,7 @@
                 }
             });
 
-            xhr.addEventListener('error', function() {
+            xhr.addEventListener('error', function(){
                 onError('Произошла ошибка соединения');
             });
 
@@ -27,11 +27,8 @@
                 onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
             });
 
-            xhr.send;
-        },
-        
-        upload: function() {
-
+            xhr.send();
         }
+        
     };
 })();
