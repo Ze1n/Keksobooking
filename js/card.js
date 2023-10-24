@@ -5,7 +5,7 @@
     let similarFeaturesTemplate = document.querySelector('template').content.querySelector('.feature');
     let similarPhotosTemplate = document.querySelector('template').content.querySelector('.photo');
 
-    window.renderCard = function(card){
+    window.renderCard = function(card, num){
         let cardElement = similarCardTemplate.cloneNode(true);
         let fragmentFeatures = document.createDocumentFragment();
         let fragmentPhotos = document.createDocumentFragment();
@@ -24,7 +24,7 @@
             return photoElement;
         }
     
-    
+        cardElement.id = `pin__card${num}`;
         cardElement.querySelector(".popup__title").textContent = card.offer.title;
         cardElement.querySelector(".popup__address").textContent = card.offer.address;
         cardElement.querySelector(".popup__price").textContent = `${card.offer.price}₽/ночь`;

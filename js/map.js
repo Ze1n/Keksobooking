@@ -206,6 +206,7 @@ let capacitySelectList = noticeForm.querySelector('#capacity');
 
 function onButtonCloseClick(){
     similarCardElement.querySelector('article').classList.add('hidden');
+    console.log('fffff');
 }
 
 function makeDisOrAble(flag){
@@ -237,10 +238,8 @@ function onButtonSubmitPress(){
     if (count === 0){
         document.querySelector('.notice__form').classList.add('notice__form--disabled');
         makeDisOrAble(true);
-        similarCardElement.removeChild(similarCardElement.querySelector('article'));
-        for (let i = 0; i < ads.length; i++){
-            similarPinsElement.removeChild(similarPinsElement.querySelector(`.map__pin${i}`));
-        }
+        
+
         document.querySelector('.map').classList.add('map--faded');
         noticeForm.querySelectorAll('input').forEach(element => {
             element.value = '';
@@ -270,17 +269,22 @@ function onButtonResetPress(){
     mapPinMain.style.top = MAIN_PIN_START_Y + 'px';
 }
 
-// function onPinClickPress(evt){
-//     for (var i = 0; i < ads.length; i++){
-//         if (evt.target.className === `pin__img pin__img${i}`){
-//             similarCardElement.removeChild(similarCardElement.querySelector('article'));
-//             fragment2.appendChild(renderCard(ads[i]));
-//             similarCardElement.insertBefore(fragment2, document.querySelector(".map__filters-container"));
-//             let buttonPopupClose = similarCardElement.querySelector('.popup__close');
-//             buttonPopupClose.addEventListener('click', onButtonCloseClick);
-//         } 
-//     }
-// }
+function onPinClickPress(evt){
+    let mapCards = similarCardElement.querySelectorAll('article');
+    let buttonPopupClose = similarCardElement.querySelector('.popup__close');
+    console.log(evt.target);
+
+    mapCards.forEach(element => {
+        element.classList.add('hidden');
+        buttonPopupClose.addEventListener('click', onButtonCloseClick);
+    });
+
+    for (let i = 0; i < 8; i++){
+        if (evt.target.id === `pin__img${i}`){
+            similarCardElement.querySelector(`#pin__card${i}`).classList.remove('hidden');
+        } 
+    }
+}
 
 function onTypeInputChange(){
     if (typeSelectList.value === 'flat'){
@@ -421,7 +425,7 @@ mapPinMainHandler.addEventListener('mousedown', function(evt){
 });
 
 makeDisOrAble(true);
-// document.addEventListener('click', onPinClickPress);
+document.addEventListener('click', onPinClickPress);
 noticeForm.addEventListener('invalid', function(evt){
     evt.target.classList.add('input--invalid')
 }, true);
@@ -447,13 +451,13 @@ function successHandler(ads) {
     let fragmentCards = document.createDocumentFragment();
 
     for (let i = 0; i < 8; i++){
-        fragmentPins.appendChild(window.renderPins(ads[i]));
+        fragmentPins.appendChild(window.renderPins(ads[i], i));
     }
 
     similarPinsElement.appendChild(fragmentPins);
 
     for (let i = 0; i < 8; i++){
-        fragmentCards.appendChild(window.renderCard(ads[i]));
+        fragmentCards.appendChild(window.renderCard(ads[i], i));
     }
 
     similarCardElement.insertBefore(fragmentCards, document.querySelector(".map__filters-container"));
