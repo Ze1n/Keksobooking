@@ -15,14 +15,14 @@
             featureElement.className = `feature feature--${card.offer.features[index]}`;
 
             return featureElement;
-        }
+        };
 
         function renderPhotos(card, index) {
             let photoElement = similarPhotosTemplate.cloneNode(true);
             photoElement.querySelector('img').src = card.offer.photos[index];
 
             return photoElement;
-        }
+        };
     
         cardElement.id = `pin__card${num}`;
         cardElement.querySelector(".popup__title").textContent = card.offer.title;
@@ -60,5 +60,5 @@
         cardElement.classList.add('hidden');
     
         return cardElement;
-    }
+    };
 })();
