@@ -18,6 +18,20 @@
     let mapPinMain = document.querySelector(".map__pin--main");
     let mapPinMainHandler = document.querySelector('.map__pin--main img');
 
+    let typeFilter = document.querySelector('#housing-type');
+    let priceFilter = document.querySelector('#housing-price');
+    let roomsFilter = document.querySelector('#housing-rooms');
+    let guestsFilter = document.querySelector('#housing-guests');
+
+    let wifiFilter = document.querySelector('#filter-wifi');
+    let dishwasherFilter = document.querySelector('#filter-dishwasher');
+    let parkingFilter = document.querySelector('#filter-parking');
+    let washerFilter = document.querySelector('#filter-washer');
+    let elevatorFilter = document.querySelector('#filter-elevator');
+    let conditionerFiler = document.querySelector('#filter-conditioner');
+
+    let adsData = [];
+
     function onPinClickPress(evt){
         let cards = similarCardElement.querySelectorAll('article');
 
@@ -121,11 +135,35 @@
 
     });
 
+    function priceLvl(ad){
+        if (ad.offer.price ) {
+            
+        }
+    };
+
+    function getRank(ad){
+        let rank = 0;
+
+        if (ad.offer.type === typeFilter.value) {
+            rank  += 10;
+        }
+        if (ad.offer.price === priceFilter.value) {
+            rank  += 3;
+        }
+        if (ad.offer.rooms === roomsFilter.value) {
+            rank  += 7;
+        }
+        if (ad.offer.guests === guestsFilter.value) {
+            rank  += 5;
+        }
+    };
+
     similarPinsElement.addEventListener('click', onPinClickPress);
 
     function successHandler(ads) {
         let fragmentPins = document.createDocumentFragment();
         let fragmentCards = document.createDocumentFragment();
+        adsData = ads;
 
         for (let i = 0; i < 8; i++){
             fragmentPins.appendChild(window.renderPins(ads[i], i));
