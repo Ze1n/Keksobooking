@@ -47,7 +47,7 @@
             });
         }
 
-        for (let i = 0; i < 8; i++){
+        for (let i = 0; i < adsData.length; i++){
             if (evt.target.id === `pin__img${i}`){
                 cards.forEach(element => {
                     element.classList.add('hidden');
@@ -58,7 +58,7 @@
                 similarCardElement.querySelector(`#pin__card${i}`).classList.remove('hidden');
             } 
         }
-    }
+    };
 
     mapPinMainHandler.addEventListener('mousedown', function(evt){
         evt.preventDefault();
@@ -135,52 +135,99 @@
 
     });
 
-    function priceLvl(ad){
-        if (ad.offer.price ) {
-            
-        }
-    };
-
-    function getRank(ad){
-        let rank = 0;
-
-        if (ad.offer.type === typeFilter.value) {
-            rank  += 10;
-        }
-        if (ad.offer.price === priceFilter.value) {
-            rank  += 3;
-        }
-        if (ad.offer.rooms === roomsFilter.value) {
-            rank  += 7;
-        }
-        if (ad.offer.guests === guestsFilter.value) {
-            rank  += 5;
-        }
-    };
-
-    similarPinsElement.addEventListener('click', onPinClickPress);
-
-    function successHandler(ads) {
+    function render(ads){
         let fragmentPins = document.createDocumentFragment();
         let fragmentCards = document.createDocumentFragment();
-        adsData = ads;
 
-        for (let i = 0; i < 8; i++){
+        for (let i = 0; i < ads.length; i++){
             fragmentPins.appendChild(window.renderPins(ads[i], i));
         }
 
         similarPinsElement.appendChild(fragmentPins);
 
-        for (let i = 0; i < 8; i++){
+        for (let i = 0; i < ads.length; i++){
             fragmentCards.appendChild(window.renderCard(ads[i], i));
         }
 
         similarCardElement.insertBefore(fragmentCards, document.querySelector(".map__filters-container"));
-    }
+    };
+
+
+
+
+
+
+
+    function updateAds(){
+        let adsDataCopy = [];
+        
+        adsDataCopy = adsData.filter(function(it){
+            if (typeFilter.value === 'any') {
+                return true;
+            }
+
+            return it.offer.type === typeFilter.value;
+        });
+
+        // adsDataCopy = adsData.filter(function(it){
+        //     if (priceFilter.value === 'any') {
+        //         return true;
+        //     }
+        //     if (priceFilter.value === 'middle') {
+        //         return (it.offer.price >= 10000 && it.offer.price <= 50000); 
+        //     }
+        //     if (priceFilter.value === 'low') {
+        //         return it.offer.price < 10000;
+        //     }
+            
+        //     return it.offer.price > 50000;
+        // });
+
+
+
+        let pins = similarPinsElement.querySelectorAll('.map__pin');
+        let cards = similarCardElement.querySelectorAll('.map__card');
+
+        for (let i = 0; i < pins.length; i++) {
+
+            if (pins[i].className === 'map__pin map__pin--main') {
+                continue;
+            }
+
+            similarPinsElement.removeChild(pins[i]);
+        }
+
+        cards.forEach(function(it) {
+            similarCardElement.removeChild(it);
+        });
+
+
+        render(adsDataCopy);
+
+        pins = similarPinsElement.querySelectorAll('.map__pin');
+
+        pins.forEach(element => {
+            element.classList.remove('hidden');
+        });
+    };
+
+
+
+
+
+
+
+    function successHandler(ads) {
+        adsData = ads;
+
+        render(ads);
+    };
 
     function errorHandler(errorMessage){
         alert(errorMessage);
     };
 
+    typeFilter.addEventListener('change', updateAds);
+    similarPinsElement.addEventListener('click', onPinClickPress);
     window.backend.download(successHandler, errorHandler);
 })();
