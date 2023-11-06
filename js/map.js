@@ -160,8 +160,22 @@
 
     function updateAds(){
         let adsDataCopy = [];
+        let subtotal = adsData.slice();
         
-        adsDataCopy = adsData.filter(function(it){
+        function filterPins(element){
+            adsDataCopy = subtotal.filter(function(it){
+                if (element.checked && it.offer.features !== undefined) {
+                    return it.offer.features.includes(element.value);
+                }
+                if (element.checked === false) {
+                    return true;
+                }
+            });
+    
+            subtotal = adsDataCopy;
+        };
+
+        adsDataCopy = subtotal.filter(function(it){
             if (typeFilter.value === 'any') {
                 return true;
             }
@@ -169,21 +183,50 @@
             return it.offer.type === typeFilter.value;
         });
 
-        // adsDataCopy = adsData.filter(function(it){
-        //     if (priceFilter.value === 'any') {
-        //         return true;
-        //     }
-        //     if (priceFilter.value === 'middle') {
-        //         return (it.offer.price >= 10000 && it.offer.price <= 50000); 
-        //     }
-        //     if (priceFilter.value === 'low') {
-        //         return it.offer.price < 10000;
-        //     }
+        subtotal = adsDataCopy;
+
+        adsDataCopy = subtotal.filter(function(it){
+            if (priceFilter.value === 'any') {
+                return true;
+            }
+            if (priceFilter.value === 'middle') {
+                return (it.offer.price >= 10000 && it.offer.price <= 50000); 
+            }
+            if (priceFilter.value === 'low') {
+                return it.offer.price < 10000;
+            }
             
-        //     return it.offer.price > 50000;
-        // });
+            return it.offer.price > 50000;
+        });
 
+        subtotal = adsDataCopy;
 
+        adsDataCopy = subtotal.filter(function(it){
+            if (roomsFilter.value === 'any') {
+                return true;
+            }
+
+            return it.offer.rooms === +roomsFilter.value;
+        });
+
+        subtotal = adsDataCopy;
+
+        adsDataCopy = subtotal.filter(function(it){
+            if (guestsFilter.value === 'any') {
+                return true;
+            }
+
+            return it.offer.guests === +guestsFilter.value;
+        });
+
+        subtotal = adsDataCopy;
+
+        filterPins(wifiFilter);
+        filterPins(dishwasherFilter);
+        filterPins(parkingFilter);
+        filterPins(washerFilter);
+        filterPins(elevatorFilter);
+        filterPins(conditionerFiler);
 
         let pins = similarPinsElement.querySelectorAll('.map__pin');
         let cards = similarCardElement.querySelectorAll('.map__card');
@@ -228,6 +271,18 @@
     };
 
     typeFilter.addEventListener('change', updateAds);
+    priceFilter.addEventListener('change', updateAds);
+    roomsFilter.addEventListener('change', updateAds);
+    guestsFilter.addEventListener('change', updateAds);
+    wifiFilter.addEventListener('change', updateAds);
+    dishwasherFilter.addEventListener('change', updateAds);
+    parkingFilter.addEventListener('change', updateAds);
+    washerFilter.addEventListener('change', updateAds);
+    elevatorFilter.addEventListener('change', updateAds);
+    conditionerFiler.addEventListener('change', updateAds);
+    
+
+
     similarPinsElement.addEventListener('click', onPinClickPress);
     window.backend.download(successHandler, errorHandler);
 })();
