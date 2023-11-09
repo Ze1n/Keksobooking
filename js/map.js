@@ -263,7 +263,7 @@
     function successHandler(ads) {
         adsData = ads;
 
-        render(ads);
+        render(adsData);
     };
 
     function errorHandler(errorMessage){
