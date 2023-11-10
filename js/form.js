@@ -49,6 +49,18 @@
     function onButtonResetPress() {
         let cards = document.querySelectorAll('.map__card');
         let pins = document.querySelectorAll('.map__pin');
+        let picturesBlock = document.querySelector('.form__photo-container');
+        let avatarPicture = document.querySelector('.avatar-pic');
+
+        avatarPicture.src = 'img/muffin.png';
+
+        if (document.querySelector('.ad-picture') !== undefined) {
+            let adPictures = document.querySelectorAll('.ad-picture');
+
+            adPictures.forEach(function(element){
+                picturesBlock.removeChild(element);
+            });
+        }
 
         pins.forEach(element => {
             element.classList.add('hidden');

@@ -45,7 +45,7 @@
             closeButtons.forEach(element => {
                 element.removeEventListener('click', onButtonCloseClick);
             });
-        }
+        };
 
         for (let i = 0; i < adsData.length; i++){
             if (evt.target.id === `pin__img${i}`){
@@ -152,12 +152,6 @@
         similarCardElement.insertBefore(fragmentCards, document.querySelector(".map__filters-container"));
     };
 
-
-
-
-
-
-
     function updateAds(){
         let adsDataCopy = [];
         let subtotal = adsData.slice();
@@ -244,7 +238,6 @@
             similarCardElement.removeChild(it);
         });
 
-
         render(adsDataCopy);
 
         pins = similarPinsElement.querySelectorAll('.map__pin');
@@ -253,12 +246,6 @@
             element.classList.remove('hidden');
         });
     };
-
-
-
-
-
-
 
     function successHandler(ads) {
         adsData = ads;
@@ -281,8 +268,6 @@
     elevatorFilter.addEventListener('change', updateAds);
     conditionerFiler.addEventListener('change', updateAds);
     
-
-
     similarPinsElement.addEventListener('click', onPinClickPress);
     window.backend.download(successHandler, errorHandler);
 })();

@@ -2,6 +2,22 @@
 
 (function () {
     let similarMapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+    // let customCoords = generateCoords(50);
+
+    // function generateCoords(num){
+    //     let coords = [];
+
+    //     for (let i = 0; i < num; i++) {
+    //         coords[i] = {
+    //             location: {
+    //                 x: getRandomIntInclusive(23, 1177),
+    //                 y: getRandomIntInclusive(130, 630)
+    //             },
+    //         };
+    //     }
+
+    //     return coords;
+    // };
 
     function getRandomIntInclusive(min, max){
         min = Math.ceil(min);

@@ -388,6 +388,11 @@ textarea:focus {
 
 }
 
+.ad-picture {
+  max-width: 100%;
+  height: auto;
+}
+
 .photo img {
   max-width: 100%;
   height: auto;
